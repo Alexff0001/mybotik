@@ -456,8 +456,8 @@ async def on_user_update(before, after):
             color = discord.Color.from_rgb(244, 127, 255),
             timestamp = datetime.datetime.utcnow()
             )
-        embedname.add_field(name = Ник до, value = before.name, inline = True)
-        embedname.add_field(name = Ник после, value = after.name, inline = True)
+        embedname.add_field(name = 'Ник до', value = before.name, inline = True)
+        embedname.add_field(name = 'Ник после', value = after.name, inline = True)
         
         await channellog.send(embed = embedname)
 
