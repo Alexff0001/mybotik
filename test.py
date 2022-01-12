@@ -448,7 +448,18 @@ async def on_user_update(before, after):
         await channellog.send(embed = embed)
         await channel.send(embed = embed1)
         await asyncio.sleep(300)
-
+                
+    if before.name != after.name:
+        channellog = bot.get_channel(874520061069623388)
+        embedname = discord.Embed(
+            title = "Ник пользователя изменен",
+            color = discord.Color.from_rgb(244, 127, 255),
+            timestamp = datetime.datetime.utcnow()
+            )
+        embedname.add_field(name = Ник до, value = before.name, inline = True)
+        embedname.add_field(name = Ник после, value = after.name, inline = True)
+        
+        await channellog.send(embed = embedname)
 
 # @bot.event
 # async def on_member_update(before, after):
