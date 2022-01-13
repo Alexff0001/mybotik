@@ -465,7 +465,7 @@ async def on_user_update(before, after):
         channellog = bot.get_channel(874520061069623388)
         embedname = discord.Embed(
             title = "Ник пользователя изменен",
-            description = f'**Ник до изменения:** {before.name}\n**Ник после изменения:** {after.name}'
+            description = f'**Ник до изменения:** {before.name}\n**Ник после изменения:** {after.name}',
             color = discord.Color.from_rgb(244, 127, 255),
             timestamp = datetime.datetime.utcnow()
             )
