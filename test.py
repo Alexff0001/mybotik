@@ -422,7 +422,19 @@ async def zayavka(ctx):
         Button(style = ButtonStyle.URL, label = 'Оставить заявку!', url = 'https://docs.google.com/forms/d/1-1ofO2tixhp6uRM0ZeouyHYILQWoTEDXe5BUIsNTgJA/'),
         ] ])
 
+@bot.command(aliases = ['фама'])
+async def famq(ctx):
+    channel = bot.get_channel(874398614892474409)
+    embed = discord.Embed(
+        description = '__Чтобы получить роль вашей фамы, вам нужно набрать минимум 10 плюсов с названием фамы.__', 
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed.set_footer(text = ctx.guild.name)
+    embed.timestamp = datetime.datetime.utcnow()
 
+    await channel.send(embed = embed)
+    
+    
 @bot.event
 async def on_user_update(before, after):
     if before.avatar != after.avatar:
