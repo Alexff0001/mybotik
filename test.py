@@ -86,7 +86,7 @@ async def on_member_join(member):
     embed.set_author(name = 'Добро пожаловать на сервер!', icon_url = member.avatar_url)
     embed.timestamp = datetime.datetime.utcnow()
     await bot.get_channel(874756699435712542).send(embed = embed1)
-    await bot.get_channel(904729869911490641).send(f'{member.mention}', embed = embed, delete_after = 25)
+    await bot.get_channel(904729869911490641).send(f'{member.mention}', embed = embed, delete_after = 60)
 
 
 @bot.event
@@ -465,11 +465,12 @@ async def on_user_update(before, after):
         channellog = bot.get_channel(874520061069623388)
         embedname = discord.Embed(
             title = "Ник пользователя изменен",
+            description = f'**Ник до изменения:** {before.name}\n**Ник после изменения:** {after.name}'
             color = discord.Color.from_rgb(244, 127, 255),
             timestamp = datetime.datetime.utcnow()
             )
-        embedname.add_field(name = 'Ник до', value = before.name, inline = True)
-        embedname.add_field(name = 'Ник после', value = after.name, inline = True)
+        embedname.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
+        embedname.set_footer(text = 'Famq&News Bot')
         
         await channellog.send(embed = embedname)
 
