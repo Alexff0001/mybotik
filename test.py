@@ -375,7 +375,7 @@ async def server(ctx):
     # embed.add_field(name = 'Эмодзи', value = emojis, inline = True)
     # embed.add_field(name = 'Максимальное кол-во', value = mmembers, inline = True)
     embed.add_field(name = 'Кол-во участников', value = memberCount, inline = True) 
-    embed.add_field(name = 'Каналы', value = f'Всего: **{channels}**\n<:text:931527430978551858> Текстовых: **{text_channels}**\nГолосовых: **{voice_channels}**', inline = True)
+    embed.add_field(name = 'Каналы', value = f'<:channel:931570849838952488> Всего: **{channels}**\n<:text:931570884999778304> Текстовых: **{text_channels}**\n<:voice:931570641717571675> Голосовых: **{voice_channels}**', inline = True)
     embed.add_field(name='Уровеь проверки', value = str(ctx.guild.verification_level), inline = True)
     embed.add_field(name = 'ID сервера', value = id, inline = True)
     embed.set_footer(text = 'Вызвано для: ' + author)
