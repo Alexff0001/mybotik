@@ -356,11 +356,21 @@ async def server(ctx):
     mmembers = str(ctx.guild.max_members)
     banner = str(ctx.guild.banner_url)
     author = str(ctx.author)
-    created = str(ctx.guild.created_at.strftime('%d %B %Yг. %H:%M:%S'))
+    created = str(ctx.guild.created_at.strftime('%d %B %Yг.'))
     text_channels = len(ctx.guild.text_channels)
     voice_channels = len(ctx.guild.voice_channels)
     categories = len(ctx.guild.categories)
     channels = text_channels + voice_channels
+
+    bot = [bot.mention for bot in ctx.guild.members if bot.bot]
+    people = [Member for Member in ctx.guild.members if not Member.bot]
+
+    members = set(ctx.message.guild.members)
+    offline = filter(lambda m: m.status is discord.Status.offline, members)
+    offline = set(offline)
+    bots = filter(lambda m: m.bot, members)
+    bots = set(bots)
+    users = members - bots
 
     embed = discord.Embed(
         title = f'{ctx.guild.name}',
@@ -371,11 +381,15 @@ async def server(ctx):
     embed.set_thumbnail(url = icon)
     # embed.add_field(name = 'Овнер', value = owner, inline = False)
     # embed.add_field(name = 'ID', value = id, inline = True)
-    embed.add_field(name = 'Дата создания', value = created, inline = True)
     # embed.add_field(name = 'Эмодзи', value = emojis, inline = True)
     # embed.add_field(name = 'Максимальное кол-во', value = mmembers, inline = True)
-    embed.add_field(name = 'Кол-во участников', value = memberCount, inline = True) 
-    embed.add_field(name = 'Каналы', value = f'<:channel:931570849838952488> Всего: **{channels}**\n<:text:931570884999778304> Текстовых: **{text_channels}**\n<:voice:931570641717571675> Голосовых: **{voice_channels}**', inline = True)
+    embed.add_field(name = 'Активность', value = f'<:online:929006151549452288>Онлайн: **{len(users - offline)}**\n<:offline:929005971248934922>Оффлайн: **{len(users & offline)}**', inline = True)
+    # embed.add_field(name = "Online Users", value = str(len(users - offline)))
+    # embed.add_field(name = "Offline Users", value = str(len(users & offline)))
+    embed.add_field(name = 'Кол-во участников', value = f'<:image11:931630270417862656> Всего: **{memberCount}**\n<:image12:931630269767753788> Людей: **{len(people)}**\n<:bot:931623329050288229> Ботов: **{len(bot)}**', inline = True) 
+    embed.add_field(name = 'Каналы и категории', value = f'<a:st2:903087219802263592> Категорий: **{categories}**\n<:channel:931570849838952488> Каналов: **{channels}**\n<:text:931570884999778304> Текстовых: **{text_channels}**\n<:voice:931570641717571675> Голосовых: **{voice_channels}**', inline = True)
+    embed.add_field(name = 'Дата создания', value = created, inline = True)
+    # embed.add_field(name = 'Высшая роль', value = ctx.guild.roles[-1], inline = False)
     embed.add_field(name='Уровеь проверки', value = str(ctx.guild.verification_level), inline = True)
     embed.add_field(name = 'ID сервера', value = id, inline = True)
     embed.set_footer(text = 'Вызвано для: ' + author)
