@@ -14,7 +14,6 @@ import os
 import json
 import random
 
-os.chdir("D:\\Александр\\Discord\\new")
 
 intents = discord.Intents.default()
 intents.members = True
