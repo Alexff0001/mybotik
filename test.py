@@ -1,27 +1,3 @@
-# import discord
-
-# class MyClient(discord.Client):
-#     async def on_ready(self):
-#         print('Logged on as', self.user)
-
-#     async def on_message(self, message):
-#         # don't respond to ourselves
-#         if message.author == self.user:
-#             return
-
-#         if message.content == 'Привет':
-#             await message.channel.send  ('До встречи') 
-
-#         if message.content == 'Как дела?':
-#             await message.channel.send  ('С кайфом')
-
-#         if message.content == 'привет':
-#             await message.channel.send  (f' { message.author.mention }, приветствую.')
-
-
-# client = MyClient()
-# client.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
-
 import discord
 from discord import Embed
 
@@ -34,6 +10,11 @@ from discord_components import Button, ButtonStyle, Select, SelectOption, Discor
 import sqlite3
 import asyncio
 import datetime
+import os
+import json
+import random
+
+os.chdir("D:\\Александр\\Discord\\new")
 
 intents = discord.Intents.default()
 intents.members = True
@@ -372,12 +353,15 @@ async def server(ctx):
     region = str(ctx.guild.region)
     memberCount = str(ctx.guild.member_count)
     icon = str(ctx.guild.icon_url)
-    channel = str(ctx.guild.voice_channels)
     emojis = str(ctx.guild.emojis)
     mmembers = str(ctx.guild.max_members)
     banner = str(ctx.guild.banner_url)
     author = str(ctx.author)
     created = str(ctx.guild.created_at.strftime('%d %B %Yг. %H:%M:%S'))
+    text_channels = len(ctx.guild.text_channels)
+    voice_channels = len(ctx.guild.voice_channels)
+    categories = len(ctx.guild.categories)
+    channels = text_channels + voice_channels
 
     embed = discord.Embed(
         title = f'{ctx.guild.name}',
@@ -392,6 +376,8 @@ async def server(ctx):
     # embed.add_field(name = 'Эмодзи', value = emojis, inline = True)
     # embed.add_field(name = 'Максимальное кол-во', value = mmembers, inline = True)
     embed.add_field(name = 'Кол-во участников', value = memberCount, inline = True) 
+    embed.add_field(name = 'Каналы', value = f'Всего: **{channels}**\n<:text:931527430978551858> Текстовых: **{text_channels}**\nГолосовых: **{voice_channels}**', inline = True)
+    embed.add_field(name='Уровеь проверки', value = str(ctx.guild.verification_level), inline = True)
     embed.add_field(name = 'ID сервера', value = id, inline = True)
     embed.set_footer(text = 'Вызвано для: ' + author)
     embed.set_image(url = banner)
@@ -422,6 +408,7 @@ async def zayavka(ctx):
         Button(style = ButtonStyle.URL, label = 'Оставить заявку!', url = 'https://docs.google.com/forms/d/1-1ofO2tixhp6uRM0ZeouyHYILQWoTEDXe5BUIsNTgJA/'),
         ] ])
 
+
 @bot.command(aliases = ['фама'])
 async def famq(ctx):
     channel = bot.get_channel(874398614892474409)
@@ -433,8 +420,8 @@ async def famq(ctx):
     embed.timestamp = datetime.datetime.utcnow()
 
     await channel.send(embed = embed)
-    
-    
+
+
 @bot.event
 async def on_user_update(before, after):
     if before.avatar != after.avatar:
@@ -451,7 +438,7 @@ async def on_user_update(before, after):
 
         embed1 = discord.Embed(
             title = 'Рандомная аватарка',
-            color = discord.Color.from_rgb(244, 127, 255)
+            color = discord.Color.from_rgb(65, 121, 78)
             )
         embed1.set_image(url = after.avatar_url)
         embed1.set_footer(text = 'Famq&News Bot')
@@ -460,41 +447,85 @@ async def on_user_update(before, after):
         await channellog.send(embed = embed)
         await channel.send(embed = embed1)
         await asyncio.sleep(300)
-                
+
     if before.name != after.name:
         channellog = bot.get_channel(874520061069623388)
         embedname = discord.Embed(
             title = "Ник пользователя изменен",
             description = f'**Ник до изменения:** {before.name}\n**Ник после изменения:** {after.name}',
-            color = discord.Color.from_rgb(244, 127, 255),
-            timestamp = datetime.datetime.utcnow()
+            color = discord.Color.from_rgb(65, 121, 78),
             )
+        embedname.timestamp = datetime.datetime.utcnow()
+        embedname.set_thumbnail(url = after.avatar_url)
         embedname.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
         embedname.set_footer(text = 'Famq&News Bot')
         
         await channellog.send(embed = embedname)
 
-# @bot.event
-# async def on_member_update(before, after):
+    if before.discriminator != after.discriminator:
+        channellog = bot.get_channel(874520061069623388)
+        embedtag = Embed(
+            title = "Тэг пользователя изменен",
+            color = discord.Color.from_rgb(65, 121, 78),
+            )
+        embedtag.timestamp = datetime.datetime.utcnow()
+        embedtag.set_thumbnail(url = after.avatar_url)
+        embedtag.add_field(name = 'До изменения', value = before.discriminator, inline = True)
+        embedtag.add_field(name = 'После изменения', value = after.discriminator, inline = True)
+        embedtag.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
+        embedtag.set_footer(text = 'Famq&News Bot')
+            
+        await channellog.send(embed = embedtag)
+
+
+
+@bot.event
+async def on_member_update(before, after):
+        if before.display_name != after.display_name:
+            channellog = bot.get_channel(874520061069623388)
+            embed = Embed(title = "Ник на сервере изменен",
+                          color = discord.Color.from_rgb(65, 121, 78),
+                          )
+            embed.timestamp = datetime.datetime.utcnow()
+            embed.set_thumbnail(url = after.avatar_url)
+            embed.add_field(name = 'До изменения', value = before.display_name, inline = True)
+            embed.add_field(name = 'После изменения', value = after.display_name, inline = True)
+            embed.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
+            embed.set_footer(text = 'Famq&News Bot')
+
+            await channellog.send(embed = embed)
+
+        elif before.roles != after.roles:
+            channellog = bot.get_channel(874520061069623388)
+            embed1 = Embed(title = "Роль изменена",
+                          color = discord.Color.from_rgb(65, 121, 78),
+                          )
+            embed1.timestamp = datetime.datetime.utcnow()
+            embed1.set_thumbnail(url = after.avatar_url)
+            embed1.add_field(name = 'До изменения', value = ", ".join([r.mention for r in before.roles]), inline = True)
+            embed1.add_field(name = 'После изменения', value = ", ".join([r.mention for r in after.roles]), inline = True)
+            embed1.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
+            embed1.set_footer(text = 'Famq&News Bot')
+
+            await channellog.send(embed = embed1)
+
+
+@bot.command()
+@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+async def create(ctx, clr, *, arg):
+    guild = ctx.guild
+    color = clr
+    await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
+    embed = discord.Embed(
+        title = 'Роль успешно создана!',
+        description = f'Роль фамы **{arg}** создана!',
+        color = discord.Color(int(color, 0)),
+        timestamp = datetime.datetime.utcnow()
+        )
+    embed.set_footer(text = 'Famq&News Bot')
+    await ctx.reply(embed = embed)
     
-
-
-# @bot.event
-# async def on_user_update(before, after):
-#     if before.username != after.username:
-#         channel = bot.get_channel(874520061069623388)
-#         embed = discord.Embed(
-#             title ="Новый ник на сервере",
-#             description = f'**До:** {before.username}\n**После:** {after.username}',
-#             color = discord.Color.from_rgb(244, 127, 255)
-#             )
-#         embed.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
-#         embed.set_footer(text = 'Famq&News Bot')
-#         embed.timestamp = datetime.datetime.utcnow()
-
-#         await channel.send(embed = embed)
-
-
+    
 @bot.event
 async def on_message_edit(before, after):
     kanal = before.channel
@@ -527,48 +558,6 @@ async def on_message_delete(message):
     embed.set_footer(text = 'Cообщение отправлено: ' + time)
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
-
-# @bot.event
-# async def on_ready():
-#     cursor.execute("""CREATE TABLE users (
-#         name TEXT,
-#         id INT,
-#         cash BIGINT,
-#         rep INT,
-#         lvl INT
-#     )""")
-#     connection.commit()
-
-#     for guild in bot.guilds:
-#         for member in guild.members:
-#             if cursor.execute(f'SELECT id FROM users WHERE id = {member.id}').fetchone() is None:
-#                 cursor.execute(f'INSERT INTO users VALUES ("{member}", {member.id}, 0, 0, 1)')
-#                 connection.commit()
-#             else:
-#                 pass
-
-#     connection.commit()
-#     print('Bot connected')
-
-
-# @bot.event
-# async def on_member_join(member):
-#     if cursor.execute(f'SELECT id FROM users WHERE id = {member.id}').fetchone() is None:
-#         cursor.execute(f'INSERT INTO users VALUES ("{member}", {member.id}, 0, 0, 1)')
-#         connection.commit()
-#     else:
-#         pass
-
-
-# @bot.command(aliases = ['cash', 'баланс'])
-# async def balance(ctx, member: discord.Member = None):
-#     if member is None:
-#         await ctx.send(embed = discord.Embed(
-#             description = f"""Баланс пользователя **{ctx.author}** составляет **{cursor.execute('SELECT cash FROM users WHERE id = {}'.format(ctx.author.id)).fetchone()[0]} :dollar:**"""
-#         ))
-#     else:
-#         await ctx.send(embed = discord.Embed(
-#             description = f"""Баланс пользователя **{member}** составляет **{cursor.execute('SELECT cash FROM users WHERE id = {}'.format(member.id)).fetchone()[0]} :dollar:**"""
-#         ))     
-
+    
+    
 bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
