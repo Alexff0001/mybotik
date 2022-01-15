@@ -263,29 +263,89 @@ async def clear(ctx, amount = 25):
 
 @bot.command(aliases = ['бан'])
 @commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
-async def ban(ctx, member: discord.Member, *, reason = None):
+async def ban(ctx, member: discord.Member, *, reason = 'Не указана'):
     channel = bot.get_channel(874520061069623388)
     em = discord.Embed(
         title = 'Пользователь был забанен!',
+        description = f'**Пользователь:** {member.mention}',
         color = discord.Color.from_rgb(255, 0, 0)
         )
-    em.add_field(name = 'Пользователь', value = member.mention, inline = True)
     em.add_field(name = 'ID', value = member.id, inline = True)
     em.add_field(name = 'Причина', value = reason, inline = True)
-    
+    em.add_field(name = 'Модератор', value = f'{ctx.author.mention} {ctx.author}', inline = True)
+    em.set_footer(text = 'Famq&News Bot')
+    em.timestamp = datetime.datetime.utcnow()
+
     embed = discord.Embed(
         description = 'Пользователь забанен!',
         color = discord.Color.from_rgb(244, 127, 255)
         )
-    await member.ban(reason = reason)
-    await ctx.reply(embed = embed)
-    await channel.send(embed = em)
+    embed.set_footer(text = 'Famq&News Bot')
+    embed.timestamp = datetime.datetime.utcnow()
+        
+    if member != ctx.author:
+        await member.ban(reason = reason)
+        await ctx.reply(embed = embed)
+        await channel.send(embed = em)
+    if member == None:
+        embed0 = discord.Embed(
+            description = 'Укажи пользователя, которого хочешь забанить!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        embed0.set_footer(text = 'Famq&News Bot')
+        embed0.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = embed0)
+    if member == ctx.author:
+        embed1 = discord.Embed(
+            description = 'Ты не можешь забанить самого себя..!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        embed1.set_footer(text = 'Famq&News Bot')
+        embed1.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = embed1)
+
 
 @bot.command(aliases = ['кик'])
 @commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
-async def kick(ctx, member: discord.Member, *, reason = 'Не была указана'):
+async def kick(ctx, member: discord.Member, *, reason = 'Не указана'):
     channel = bot.get_channel(874520061069623388)
-    await member.kick(reason = reason)
+    em = discord.Embed(
+        title = 'Пользователь был кикнут!',
+        description = f'**Пользователь:** {member.mention}',
+        color = discord.Color.from_rgb(255, 0, 0)
+        )
+    em.add_field(name = 'ID', value = member.id, inline = True)
+    em.add_field(name = 'Причина', value = reason, inline = True)
+    em.add_field(name = 'Модератор', value = f'{ctx.author.mention} {ctx.author}', inline = True)
+    em.set_footer(text = 'Famq&News Bot')
+    em.timestamp = datetime.datetime.utcnow()
+
+    embed = discord.Embed(
+        description = 'Пользователь кикнут!',
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed.set_footer(text = 'Famq&News Bot')
+    embed.timestamp = datetime.datetime.utcnow()
+    if member != ctx.author:
+        await member.kick(reason = reason)
+        await ctx.reply(embed = embed)
+        await channel.send(embed = em)
+    if member == None:
+        embed0 = discord.Embed(
+            description = 'Укажи пользователя, которого хочешь кикнуть!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        embed0.set_footer(text = 'Famq&News Bot')
+        embed0.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = embed0)
+    if member == ctx.author:
+        embed1 = discord.Embed(
+            description = 'Ты не можешь кикнуть самого себя..!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        embed1.set_footer(text = 'Famq&News Bot')
+        embed1.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = embed1)
     
     
 @bot.command(aliases = ['ава'])
