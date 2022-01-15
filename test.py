@@ -468,7 +468,7 @@ async def on_user_update(before, after):
         channel = bot.get_channel(930078480249544745)
         embed = discord.Embed(
             title ="Новая аватарка",
-            color = discord.Color.from_rgb(244, 127, 255)
+            color = discord.Color.from_rgb(65, 121, 78)
             )
         embed.set_author(name = f'{after.name}#{after.discriminator}', icon_url = after.avatar_url)
         embed.set_thumbnail(url = after.avatar_url)
