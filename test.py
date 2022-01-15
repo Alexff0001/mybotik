@@ -261,7 +261,33 @@ async def clear(ctx, amount = 25):
     # await message.delete()
     await channel.send(embed = embed1)
 
+@bot.command(aliases = ['бан'])
+@commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
+async def ban(ctx, member: discord.Member, *, reason = None):
+    channel = bot.get_channel(874520061069623388)
+    em = discord.Embed(
+        title = 'Пользователь был забанен!',
+        color = discord.Color.from_rgb(255, 0, 0)
+        )
+    em.add_field(name = 'Пользователь', value = member.mention, inline = True)
+    em.add_field(name = 'ID', value = member.id, inline = True)
+    em.add_field(name = 'Причина', value = reason, inline = True)
+    
+    embed = discord.Embed(
+        description = 'Пользователь забанен!',
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    await member.ban(reason = reason)
+    await ctx.reply(embed = embed)
+    await channel.send(embed = em)
 
+@bot.command(aliases = ['кик'])
+@commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
+async def kick(ctx, member: discord.Member, *, reason = 'Не была указана'):
+    channel = bot.get_channel(874520061069623388)
+    await member.kick(reason = reason)
+    
+    
 @bot.command(aliases = ['ава'])
 async def ava(ctx, user:discord.Member = None ):
     if user is None:
@@ -451,7 +477,7 @@ async def on_user_update(before, after):
 
         embed1 = discord.Embed(
             title = 'Рандомная аватарка',
-            color = discord.Color.from_rgb(65, 121, 78)
+            color = discord.Color.from_rgb(244, 127, 255)
             )
         embed1.set_image(url = after.avatar_url)
         embed1.set_footer(text = 'Famq&News Bot')
