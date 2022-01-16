@@ -509,7 +509,7 @@ async def zayavka(ctx):
 
 
 @bot.command(aliases = ['фама'])
-async def famq(ctx):
+async def famq(ctx, user:discord.Member = None):
     channel = bot.get_channel(874398614892474409)
     embed = discord.Embed(
         description = '__Чтобы получить роль вашей фамы, вам нужно набрать минимум 10 плюсов с названием фамы.__', 
@@ -518,7 +518,10 @@ async def famq(ctx):
     embed.set_footer(text = ctx.guild.name)
     embed.timestamp = datetime.datetime.utcnow()
 
-    await channel.send(embed = embed)
+    if user is None:
+        await channel.send(embed = embed)
+    else:
+        await channel.send(user.mention, embed = embed)
 
 
 @bot.event
