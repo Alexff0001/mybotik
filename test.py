@@ -132,6 +132,8 @@ async def help(ctx):
                     color = discord.Color.from_rgb(244, 127, 255)
                     )
                 embedmod.add_field(name = '!очистить - удаление сообщений', value = 'Использование: `!очистить/!clear - удаление 25 последних сообщений`\n`!очистить <число>/!clear <число> - удаление конкретного числа сообщений`', inline = False)
+                embedmod.add_field(name = '!бан - бан участника', value = 'Использование: `!бан/!ban <пользователь> <причина> - бан пользователя с причиной`', inline = False)
+                embedmod.add_field(name = '!кик - кик участника', value = 'Использование: `!кик/!kick <пользователь> <причина> - кик пользователя с причиной`', inline = False)
                 await response.respond(embed = embedmod)
 
 
@@ -512,9 +514,43 @@ async def zayavka(ctx):
 async def famq(ctx, user:discord.Member = None):
     channel = bot.get_channel(874398614892474409)
     embed = discord.Embed(
-        description = '__Чтобы получить роль вашей фамы, вам нужно набрать минимум 10 плюсов с названием фамы.__', 
+        description = '__Чтобы получить роль вашей фамы, вам нужно набрать минимум 10 плюсов с названием фамы.__\n\n__Чтобы открыть доступ к каналам - нажмите на реакцию в <#884710136617250827>__', 
         color = discord.Color.from_rgb(244, 127, 255)
         )
+    embed.set_footer(text = ctx.guild.name)
+    embed.set_thumbnail(url = ctx.guild.icon_url)
+    embed.timestamp = datetime.datetime.utcnow()
+
+    if user is None:
+        await channel.send(embed = embed)
+    else:
+        await channel.send(user.mention, embed = embed)
+
+
+@bot.command(aliases = ['овнер'])
+async def owner(ctx, user:discord.Member = None):
+    channel = bot.get_channel(931497100485746688)
+    embed = discord.Embed(
+        title = 'Информация для овнеров',
+        description = '__Чтобы создать роль своей фамы нужно прописать команду__ `!create/!создать <цвет> <название фамы>`\n\nВ аргументе `<цвет>` нужно указать один из цветов, предоставленных ниже.\nВ аргументе `<название фамы>` нужно указать название твоей фамы с большой буквы и приписать Famq **(Пример: Primer Famq)**\n', 
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed.add_field(name = 'Чёрный', value = '0x000000', inline = True)
+    embed.add_field(name = 'Белый', value = '0xFFFFFF', inline = True)
+    embed.add_field(name = 'Серый', value = '0x808080', inline = True)
+    embed.add_field(name = 'Фиолетовый', value = '0x800080', inline = True)
+    embed.add_field(name = 'Розовый', value = '0xFF1493', inline = True)
+    embed.add_field(name = 'Пурпурный', value = '0xFF00FF', inline = True)
+    embed.add_field(name = 'Красный', value = '0xFF0000', inline = True)
+    embed.add_field(name = 'Оранжевый', value = '0xFF4500', inline = True)
+    embed.add_field(name = 'Коричневый', value = '0x8B4513', inline = True)
+    embed.add_field(name = 'Жёлтый', value = '0xFFFF00', inline = True)
+    embed.add_field(name = 'Зелёный', value = '0x008000', inline = True)
+    embed.add_field(name = 'Лаймовый', value = '0x00FF00', inline = True)
+    embed.add_field(name = 'Голубенький', value = '0x00FFFF', inline = True)
+    embed.add_field(name = 'Синий', value = '0x0000FF', inline = True)
+    embed.add_field(name = 'Морской', value = '0x191970', inline = True)
+
     embed.set_footer(text = ctx.guild.name)
     embed.timestamp = datetime.datetime.utcnow()
 
@@ -522,6 +558,22 @@ async def famq(ctx, user:discord.Member = None):
         await channel.send(embed = embed)
     else:
         await channel.send(user.mention, embed = embed)
+
+
+@bot.command(aliases = ['создать'])
+@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+async def create(ctx, color, *, arg):
+    guild = ctx.guild
+    await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
+    embed = discord.Embed(
+        title = 'Роль успешно создана!',
+        description = f'Роль фамы **{arg}** создана!\nЦвет **{color}** применён!\n\nОвнер фамы: {ctx.author.mention}',
+        color = discord.Color(int(color, 0)),
+        timestamp = datetime.datetime.utcnow()
+        )
+    embed.set_thumbnail(url = ctx.guild.icon_url)
+    embed.set_footer(text = 'Famq&News Bot')
+    await ctx.reply(embed = embed)
 
 
 @bot.event
@@ -612,20 +664,6 @@ async def on_member_update(before, after):
             await channellog.send(embed = embed1)
 
 
-@bot.command()
-@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
-async def create(ctx, clr, *, arg):
-    guild = ctx.guild
-    color = clr
-    await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
-    embed = discord.Embed(
-        title = 'Роль успешно создана!',
-        description = f'Роль фамы **{arg}** создана!',
-        color = discord.Color(int(color, 0)),
-        timestamp = datetime.datetime.utcnow()
-        )
-    embed.set_footer(text = 'Famq&News Bot')
-    await ctx.reply(embed = embed)
     
     
 @bot.event
