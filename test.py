@@ -477,7 +477,7 @@ async def owner(ctx, user:discord.Member = None):
         elif response.component.label == 'Выдача ролей':
             embed1 = discord.Embed(
                 title = 'Выдача ролей"',
-                description = '__Чтобы выдать роль своей фамы нужно прописать команду__ `!give/!выдать <роль> <пользователь>`\n\nВ аргументе `<роль>` нужно указать роль фамы, которую вы создали.\nВ аргументе `<пользователь>` нужно упомянуть 1 из членов своей фамы **(Пример: !выдать @Primer Famq <@909585478037155913>)**\n',
+                description = '__Чтобы выдать роль своей фамы нужно прописать команду__ `!give/!выдать <роль> <пользователь>`\n\nВ аргументе `<роль>` нужно указать роль фамы, которую вы создали.\nВ аргументе `<пользователь>` нужно упомянуть 1 из членов своей фамы **(Пример:** !выдать @Primer Famq <@909585478037155913>**)**\n',
                 color = discord.Color.from_rgb(244, 127, 255)
                 )
             embed1.set_footer(text = ctx.guild.name)
@@ -591,7 +591,6 @@ async def on_user_update(before, after):
         embedtag.set_footer(text = 'Famq&News Bot')
             
         await channellog.send(embed = embedtag)
-
 
 
 @bot.event
