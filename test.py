@@ -14,6 +14,7 @@ import os
 import json
 import random
 
+os.chdir("D:\\Александр\\Discord\\new")
 
 intents = discord.Intents.default()
 intents.members = True
@@ -24,18 +25,6 @@ bot.remove_command('help')
 connection = sqlite3.connect('server.db')
 cursor = connection.cursor()
 
-# @bot.command(aliases = ['go'])
-# async def on_message(ctx):
-#     message = 'Бот работает!'
-#     await bot.get_channel(928363945432080385).send(message)
-#     await asyncio.sleep(3) # 24 часов это 86400 секунд
-
-# @bot.command(aliases = ['go'])
-# async def background_task(ctx):
-#     time = 5
-#     await asyncio.sleep(time)
-#     message = 'Бот работает!'
-#     await bot.get_channel(928363945432080385).send(message)
 
 @bot.event
 async def on_ready():
@@ -97,7 +86,7 @@ async def help(ctx):
     embed.set_thumbnail(url = ctx.guild.icon_url)
     embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     embed.add_field(name = '<a:st2:903087219802263592> Информация (!инфо Информация)', value = '`!help[!хелп, !помощь]` `!server[!сервер]` `!user[!юзер]` `!info[!инфо]`', inline = False)
-    embed.add_field(name = '<a:st1:903087219777093642> Модерация (!инфо Модерация)', value = '`!clear[!очистить]`', inline = False)
+    embed.add_field(name = '<a:st1:903087219777093642> Модерация (!инфо Модерация)', value = '`!clear[!очистить]` `!ban[!бан]` `!kick[!кик]`', inline = False)
     embed.add_field(name = '<a:st2:903087219802263592> Полезное (!инфо Полезное)', value = '`!ava[!ава]`', inline = False)
     await ctx.reply(embed = embed, components = [ [
         Button(style = ButtonStyle.green, label = 'Информация', emoji = '🥀'),
@@ -135,58 +124,6 @@ async def help(ctx):
                 embedmod.add_field(name = '!бан - бан участника', value = 'Использование: `!бан/!ban <пользователь> <причина> - бан пользователя с причиной`', inline = False)
                 embedmod.add_field(name = '!кик - кик участника', value = 'Использование: `!кик/!kick <пользователь> <причина> - кик пользователя с причиной`', inline = False)
                 await response.respond(embed = embedmod)
-
-
-    # e1 = discord.Embed(
-    # #     title = 'Доступные команды подгруппы "Информация"',
-    # #     color = discord.Color.from_rgb(244, 127, 255)
-    # #     )
-    # # e1.add_field(name = '!хелп - список всех команд бота', value = 'Использование: `!хелп`/`!help`', inline = False)
-    # # e1.add_field(name = '!сервер - основная информация о сервере', value = 'Использование: `!сервер`/`!server`', inline = False)
-    # # e1.add_field(name = '!юзер - основная информация о пользователе', value = 'Использование: `!юзер <упоминание пользователя>`/`!user <упоминание пользователя>`', inline = False)
-    # # e1.add_field(name = '!инфо - информация о боте/командах', value = 'Использование: `!инфо/!info - информация о боте\n!инфо <название команды>/!info <название команды> - информация о команде`', inline = False)
-
-    # res = await bot.wait_for("select_option")
-    # await res.respond(content = "Вы выбрали: "+str(res.component.emoji))
-
-    # while True:
-    #     try:
-    #         event = await bot.wait_for('select_option', check = None)
-    #         label = event.component[0].label
-    #         if label == 'Информация':
-    #             await event.respond(
-    #                 type = InteractionType.ChannelMessageWithSource,
-    #                 ephemeral = True,
-    #                 embed = e1)
-
-    #     except discord.NotFound:
-    #         print('error.')
-
-
-# @bot.command()
-# async def select(ctx):
-#     await ctx.reply("Список", components=[
-#         Select(
-#             placeholder="Выберите эмоджи",
-#             options=[
-#                 SelectOption(
-#                     emoji="😎",
-#                     label="Крутое эмоджи",
-#                     description="Эмоджи1",
-#                     value="e1"
-#                 ),
-#                 SelectOption(
-#                     emoji="🍹",
-#                     label="Коктейль эмоджи",
-#                     description="Эмоджи2",
-#                     value="e1"
-#                 )
-#             ]
-#         )
-#     ])
-#     res = await bot.wait_for("select_option")
-#     await res.respond(content="Вы выбрали: "+str(res.
-# component.emoji))
 
 
 @bot.command(aliases = ['инфо'])
@@ -255,13 +192,14 @@ async def clear(ctx, amount = 25):
     channel = bot.get_channel(874520061069623388)
     embed1 = discord.Embed(
         title = 'Сообщения удалены!',
-        color = discord.Color.from_rgb(244, 127, 255)
+        color = discord.Color.from_rgb(255, 0, 0)
         )
     embed1.add_field(name = 'Количество', value = amount, inline = True)
     # embed1.add_field(name = 'Содержимое', value = text, inline = True)
     embed1.set_footer(text = 'Модератор: ' + author)
     # await message.delete()
     await channel.send(embed = embed1)
+
 
 @bot.command(aliases = ['бан'])
 @commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
@@ -348,8 +286,8 @@ async def kick(ctx, member: discord.Member, *, reason = 'Не указана'):
         embed1.set_footer(text = 'Famq&News Bot')
         embed1.timestamp = datetime.datetime.utcnow()
         await ctx.reply(embed = embed1)
-    
-    
+
+
 @bot.command(aliases = ['ава'])
 async def ava(ctx, user:discord.Member = None ):
     if user is None:
@@ -391,47 +329,6 @@ async def user(ctx, user:discord.Member = None ):
     embed.set_image(url = ctx.guild.banner_url)
     await ctx.reply(embed = embed)
     
-
-    # embed1 = discord.Embed(
-    #     title = f'Информация о пользователе __{user.name}__',
-    #     description = f'**__Основная информация__**\n<a:stars_black:839868847489417227> **Имя пользователя:** {user}\n<a:stars_white:839868847917367347> **Статус:**' + "<:online:929006151549452288>" + 'В сети\n' + f"<a:roza_black:839868851063226408> **Дата регистрации:** {user.created_at.strftime('%d %B %Yг')}\n" + '<a:roza_white:839868850908561418> **Присоединился:** ' + user.joined_at.strftime('%d %B %Yг'),
-    #     color = discord.Color.from_rgb(244, 127, 255),
-    #     timestamp = ctx.message.created_at
-    #     )
-    # embed1.set_thumbnail(url = user.avatar_url)
-    # embed1.set_footer(text = f'ID: {user.id}   Вызвано для {user}', icon_url = user.avatar_url)
-
-    # embed2 = discord.Embed(
-    #     title = f'Информация о пользователе __{user.name}__',
-    #     description = f'**__Основная информация__**\n<a:stars_black:839868847489417227> **Имя пользователя:** {user}\n<a:stars_white:839868847917367347> **Статус:**' + "<:idle:929006095995916288>" + 'Неактивен\n' + f"<a:roza_black:839868851063226408> **Дата регистрации:** {user.created_at.strftime('%d %B %Yг')}\n" + '<a:roza_white:839868850908561418> **Присоединился:** ' + user.joined_at.strftime('%d %B %Yг'),
-    #     color = discord.Color.from_rgb(244, 127, 255),
-    #     timestamp = ctx.message.created_at
-    #     )
-    # embed2.set_thumbnail(url = user.avatar_url)
-    # embed2.set_footer(text = f'ID: {user.id}   Вызвано для {user}', icon_url = user.avatar_url)
-
-    # embed3 = discord.Embed(
-    #     title = f'Информация о пользователе __{user.name}__',
-    #     description = f'**__Основная информация__**\n<a:stars_black:839868847489417227> **Имя пользователя:** {user}\n<a:stars_white:839868847917367347> **Статус:**' + "<:dnd:929006191420514354>" + 'Не беспокоить\n' + f"<a:roza_black:839868851063226408> **Дата регистрации:** {user.created_at.strftime('%d %B %Yг')}\n" + '<a:roza_white:839868850908561418> **Присоединился:** ' + user.joined_at.strftime('%d %B %Yг'),
-    #     color = discord.Color.from_rgb(244, 127, 255),
-    #     timestamp = ctx.message.created_at
-    #     )
-    # embed3.set_thumbnail(url = user.avatar_url)
-    # embed3.set_footer(text = f'ID: {user.id}   Вызвано для {user}', icon_url = user.avatar_url)
-#     # embed.add_field(name = '', value = , inline = True)
-#     # embed.add_field(name = '', value = , inline = True)
-    # embed.set_image(url = user.banner.url)
-
-    # if user.status == offline:
-    #     await ctx.reply(embed = embed)
-    # if user.status == online:
-    #     await ctx.reply(embed = embed1)
-    # if user.status == idle:
-    #     await ctx.reply(embed = embed2)
-    # if user.status == dnd:
-    #     await ctx.reply(embed = embed3)
-
-
 
 @bot.command(aliases = ['сервер'])
 async def server(ctx):
@@ -532,32 +429,60 @@ async def owner(ctx, user:discord.Member = None):
     channel = bot.get_channel(931497100485746688)
     embed = discord.Embed(
         title = 'Информация для овнеров',
-        description = '__Чтобы создать роль своей фамы нужно прописать команду__ `!create/!создать <цвет> <название фамы>`\n\nВ аргументе `<цвет>` нужно указать один из цветов, предоставленных ниже.\nВ аргументе `<название фамы>` нужно указать название твоей фамы с большой буквы и приписать Famq **(Пример: Primer Famq)**\n', 
+        description = '__План действий:__\n<a:01:884718335776948234> Самостоятельно создать роль фамы - жми на кнопку **"Создание роли"**\n<a:02:884718334644477982> Самостоятельно выдать роли всем членам своей фамы - жми на кнопку **"Выдача ролей"**', 
         color = discord.Color.from_rgb(244, 127, 255)
         )
-    embed.add_field(name = 'Чёрный', value = '0x000000', inline = True)
-    embed.add_field(name = 'Белый', value = '0xFFFFFF', inline = True)
-    embed.add_field(name = 'Серый', value = '0x808080', inline = True)
-    embed.add_field(name = 'Фиолетовый', value = '0x800080', inline = True)
-    embed.add_field(name = 'Розовый', value = '0xFF1493', inline = True)
-    embed.add_field(name = 'Пурпурный', value = '0xFF00FF', inline = True)
-    embed.add_field(name = 'Красный', value = '0xFF0000', inline = True)
-    embed.add_field(name = 'Оранжевый', value = '0xFF4500', inline = True)
-    embed.add_field(name = 'Коричневый', value = '0x8B4513', inline = True)
-    embed.add_field(name = 'Жёлтый', value = '0xFFFF00', inline = True)
-    embed.add_field(name = 'Зелёный', value = '0x008000', inline = True)
-    embed.add_field(name = 'Лаймовый', value = '0x00FF00', inline = True)
-    embed.add_field(name = 'Голубенький', value = '0x00FFFF', inline = True)
-    embed.add_field(name = 'Синий', value = '0x0000FF', inline = True)
-    embed.add_field(name = 'Морской', value = '0x191970', inline = True)
-
-    embed.set_footer(text = ctx.guild.name)
-    embed.timestamp = datetime.datetime.utcnow()
-
+    embed.set_thumbnail(url = ctx.guild.icon_url)
+    embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     if user is None:
-        await channel.send(embed = embed)
+        await channel.send(embed = embed, components = [ [
+        Button(style = ButtonStyle.green, label = 'Создание роли', emoji = '1️⃣'),
+        Button(style = ButtonStyle.red, label = 'Выдача ролей', emoji = '2️⃣')
+    ] ])
     else:
-        await channel.send(user.mention, embed = embed)
+        await channel.send(user.mention, embed = embed, components = [ [
+        Button(style = ButtonStyle.green, label = 'Создание роли', emoji = '1️⃣'),
+        Button(style = ButtonStyle.red, label = 'Выдача ролей', emoji = '2️⃣')
+    ] ])
+
+    cycle = True
+    while cycle:
+        response = await bot.wait_for('button_click')
+        # if response.channel == ctx.channel:
+        if response.component.label == 'Создание роли':
+            embed = discord.Embed(
+                title = 'Создание роли',
+                description = '__Чтобы создать роль своей фамы нужно прописать команду__ `!create/!создать <цвет> <название фамы>`\n\nВ аргументе `<цвет>` нужно указать один из цветов, предоставленных ниже.\nВ аргументе `<название фамы>` нужно указать название твоей фамы с большой буквы и приписать Famq **(Пример: Primer Famq)**\n', 
+                color = discord.Color.from_rgb(244, 127, 255)
+            )
+            embed.add_field(name = 'Чёрный', value = '0x000000', inline = True)
+            embed.add_field(name = 'Белый', value = '0xFFFFFF', inline = True)
+            embed.add_field(name = 'Серый', value = '0x808080', inline = True)
+            embed.add_field(name = 'Фиолетовый', value = '0x800080', inline = True)
+            embed.add_field(name = 'Розовый', value = '0xFF1493', inline = True)
+            embed.add_field(name = 'Пурпурный', value = '0xFF00FF', inline = True)
+            embed.add_field(name = 'Красный', value = '0xFF0000', inline = True)
+            embed.add_field(name = 'Оранжевый', value = '0xFF4500', inline = True)
+            embed.add_field(name = 'Коричневый', value = '0x8B4513', inline = True)
+            embed.add_field(name = 'Жёлтый', value = '0xFFFF00', inline = True)
+            embed.add_field(name = 'Зелёный', value = '0x008000', inline = True)
+            embed.add_field(name = 'Лаймовый', value = '0x00FF00', inline = True)
+            embed.add_field(name = 'Голубенький', value = '0x00FFFF', inline = True)
+            embed.add_field(name = 'Синий', value = '0x0000FF', inline = True)
+            embed.add_field(name = 'Морской', value = '0x191970', inline = True)
+
+            embed.set_footer(text = ctx.guild.name)
+            embed.timestamp = datetime.datetime.utcnow()
+            await response.respond(embed = embed)
+        elif response.component.label == 'Выдача ролей':
+            embed1 = discord.Embed(
+                title = 'Выдача ролей"',
+                description = '__Чтобы выдать роль своей фамы нужно прописать команду__ `!give/!выдать <роль> <пользователь>`\n\nВ аргументе `<роль>` нужно указать роль фамы, которую вы создали.\nВ аргументе `<пользователь>` нужно упомянуть 1 из членов своей фамы **(Пример: !выдать @Primer Famq <@909585478037155913>)**\n',
+                color = discord.Color.from_rgb(244, 127, 255)
+                )
+            embed1.set_footer(text = ctx.guild.name)
+            embed1.timestamp = datetime.datetime.utcnow()
+            await response.respond(embed = embed1)
 
 
 @bot.command(aliases = ['создать'])
@@ -575,6 +500,42 @@ async def create(ctx, color, *, arg):
     embed.set_footer(text = 'Famq&News Bot')
     await ctx.reply(embed = embed)
 
+
+@bot.command(aliases = ['выдать'])
+@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+async def give(ctx, role: discord.Role, user: discord.Member):
+    if user is None:
+        user = ctx.author
+        await ctx.message.add_reaction('<a:ok6:903086917371965450>')
+        await user.add_roles(role)
+    if role in user.roles:
+        em = discord.Embed(
+            description = 'Пользователь уже имеет эту роль!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        em.set_footer(text = 'Famq&News Bot')
+        em.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = em)
+    else:
+        await ctx.message.add_reaction('<a:ok6:903086917371965450>')
+        await user.add_roles(role)
+
+
+@bot.command(aliases = ['забрать'])
+@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+async def remove(ctx, role: discord.Role, user: discord.Member):
+    if role in user.roles:
+        await user.remove_roles(role)
+        await ctx.message.add_reaction('<a:ok6:903086917371965450>')
+    else:
+        em = discord.Embed(
+            description = ' Пользователь не имеет эту роль!',
+            color = discord.Color.from_rgb(255, 0, 0)
+            )
+        em.set_footer(text = 'Famq&News Bot')
+        em.timestamp = datetime.datetime.utcnow()
+        await ctx.reply(embed = em)
+    
 
 @bot.event
 async def on_user_update(before, after):
@@ -664,8 +625,6 @@ async def on_member_update(before, after):
             await channellog.send(embed = embed1)
 
 
-    
-    
 @bot.event
 async def on_message_edit(before, after):
     kanal = before.channel
@@ -698,6 +657,6 @@ async def on_message_delete(message):
     embed.set_footer(text = 'Cообщение отправлено: ' + time)
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
-    
-    
+
+
 bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
