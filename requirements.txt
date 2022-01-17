@@ -4,4 +4,5 @@ DateTime==4.3
 discord-components==2.1.2
 discord-ext-bot==1.0.1
 discord.py==1.7.3
+discord-py-interactions==3.0.2
 pip==21.3.1
