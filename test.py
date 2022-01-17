@@ -491,10 +491,10 @@ async def owner(ctx, user:discord.Member = None):
 @commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
 async def create(ctx, color, *, arg):
     guild = ctx.guild
-    await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
+    role = await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
     embed = discord.Embed(
         title = 'Роль успешно создана!',
-        description = f'Роль фамы **{arg}** создана!\nЦвет **{color}** применён!\n\nОвнер фамы: {ctx.author.mention}',
+        description = f'Роль фамы **{arg}** создана!\nЦвет **{color}** применён!\n\nID роли фамы: **{role.id}**\n\nОвнер фамы: {ctx.author.mention}',
         color = discord.Color(int(color, 0)),
         timestamp = datetime.datetime.utcnow()
         )
