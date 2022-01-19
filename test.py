@@ -539,6 +539,19 @@ async def remove(ctx, role: discord.Role, user: discord.Member):
         await ctx.reply(embed = em)
     
 
+@bot.command(aliases = ['предл'])
+async def predl(ctx):
+    embed = discord.Embed(
+        title = 'Предложка Famq&News',
+        description = 'Если вы хотите проинформировать модерацию о каком-либо событии/итоге МП/новом лидере и т.д. на сервере, то напишите в этот канал сообщение по форме, предоставленной ниже.\n\nПримерная форма сообщения:\n1. № сервера;\n2. Тип события (итог МП, новый лидер, событие и т.п.);\n3. Док-ва в виде видео или скрин, а также время происшедшего (если есть)',
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed.set_thumbnail(url = ctx.guild.icon_url)
+    embed.set_footer(text = 'Famq&News Bot')
+    embed.timestamp = datetime.datetime.utcnow()
+    await ctx.reply(embed = embed)
+
+
 @bot.event
 async def on_user_update(before, after):
     if before.avatar != after.avatar:
