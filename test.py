@@ -565,7 +565,7 @@ async def on_message(message):
         embed.add_field(name = "Содержимое сообщения:", value = message.content)
         embed.set_footer(text = 'Cообщение отправлено: ' + time)
         channel = bot.get_channel(931497036249980928)
-        await channel.send(f'<@&833342247432355840>', embed = embed)
+        await channel.send(f'@everyone', embed = embed)
         await message.delete()
 
     else:
