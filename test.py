@@ -552,7 +552,7 @@ async def predl(ctx):
     await ctx.send(embed = embed)
 
 
-@bot.event
+@bot.event()
 async def on_message(message):  
     if message.channel.id == 933375930196455454:
         time = message.created_at.strftime('%Y.%m.%d %H:%M:%S')
@@ -566,7 +566,11 @@ async def on_message(message):
         channel = bot.get_channel(931497036249980928)
         await channel.send('<@&903780351640469574>', embed = embed)
         await message.delete()
-        await bot.process_commands(message)
+
+    else:
+        pass
+
+    await bot.process_commands(message)
 
 
 @bot.event
@@ -684,7 +688,7 @@ async def on_message_delete(message):
         color = discord.Color.from_rgb(255, 0, 0)
         )
     embed.add_field(name = "Содержимое сообщения:", value = message.content)
-    embed.add_field(name = 'Канал:', value = kanal, inline = False)
+    embed.add_field(name = 'Канал:', value = f'<#{message.channel_id}>', inline = False)
     embed.set_footer(text = 'Cообщение отправлено: ' + time)
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
