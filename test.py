@@ -552,7 +552,7 @@ async def predl(ctx):
     await ctx.send(embed = embed)
 
 
-@bot.event()
+@bot.event
 async def on_message(message):  
     if message.channel.id == 933375930196455454:
         time = message.created_at.strftime('%Y.%m.%d %H:%M:%S')
