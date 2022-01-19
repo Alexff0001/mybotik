@@ -548,13 +548,14 @@ async def predl(ctx):
         color = discord.Color.from_rgb(244, 127, 255)
         )
     embed.set_thumbnail(url = ctx.guild.icon_url)
-    embed.set_footer(text = 'Famq&News Bot')
-    embed.timestamp = datetime.datetime.utcnow()
+    embed.set_footer(text = ctx.guild.name)
+    embed.set_image(url = ctx.guild.banner_url)
+
     await channel.send(embed = embed)
 
 
 @bot.event
-async def on_message(message):  
+async def on_message(message):
     if message.channel.id == 921033910899605526:
         time = message.created_at.strftime('%Y.%m.%d %H:%M:%S')
         embed = discord.Embed(
