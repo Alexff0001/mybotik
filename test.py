@@ -557,7 +557,6 @@ async def predl(ctx):
 @bot.event
 async def on_message(message):
     if message.channel.id == 921033910899605526:
-        role = ctx.guild.get_role(role_id = 903780351640469574)
         time = message.created_at.strftime('%Y.%m.%d %H:%M:%S')
         embed = discord.Embed(
             title ="Предложка пополнена!",
@@ -567,7 +566,7 @@ async def on_message(message):
         embed.add_field(name = "Содержимое сообщения:", value = message.content)
         embed.set_footer(text = 'Cообщение отправлено: ' + time)
         channel = bot.get_channel(931497036249980928)
-        await channel.send(f'{role.mention}', embed = embed)
+        await channel.send('<@&903780351640469574>', embed = embed)
         await message.delete()
 
     else:
