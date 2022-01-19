@@ -541,6 +541,7 @@ async def remove(ctx, role: discord.Role, user: discord.Member):
 
 @bot.command(aliases = ['предл'])
 async def predl(ctx):
+    channel = bot.get_channel(921033910899605526)
     embed = discord.Embed(
         title = 'Предложка Famq&News',
         description = '*Если вы хотите проинформировать модерацию о каком-либо событии/итоге МП/новом лидере и т.д. на сервере, то напишите в этот канал сообщение по форме, предоставленной ниже. После того, как вы отправите сообщение, оно удалится, а содержимое отправится в модерский канал на проверку.*\n\n**Примерная форма сообщения:**\n**1.** __№ сервера;__\n**2.** __Тип события (итог МП, новый лидер, событие и т.п.);__\n**3.** __Док-ва в виде видео или скрин, а также время происшедшего (если есть)__\n\nЗа каждую правильно отправленную информацию вам будут начисляться виртуальные деньги в экономике бота <@292953664492929025>, на которые можно купить различные роли и плюшки.',
@@ -549,12 +550,12 @@ async def predl(ctx):
     embed.set_thumbnail(url = ctx.guild.icon_url)
     embed.set_footer(text = 'Famq&News Bot')
     embed.timestamp = datetime.datetime.utcnow()
-    await ctx.send(embed = embed)
+    await channel.send(embed = embed)
 
 
 @bot.event
 async def on_message(message):  
-    if message.channel.id == 933375930196455454:
+    if message.channel.id == 921033910899605526:
         time = message.created_at.strftime('%Y.%m.%d %H:%M:%S')
         embed = discord.Embed(
             title ="Предложка пополнена!",
@@ -564,7 +565,7 @@ async def on_message(message):
         embed.add_field(name = "Содержимое сообщения:", value = message.content)
         embed.set_footer(text = 'Cообщение отправлено: ' + time)
         channel = bot.get_channel(931497036249980928)
-        await channel.send('<@&903780351640469574>', embed = embed)
+        await channel.send(f'<@&833342247432355840>', embed = embed)
         await message.delete()
 
     else:
