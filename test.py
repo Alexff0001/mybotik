@@ -691,7 +691,7 @@ async def on_message_delete(message):
         color = discord.Color.from_rgb(255, 0, 0)
         )
     embed.add_field(name = "Содержимое сообщения:", value = message.content)
-    embed.add_field(name = 'Канал:', value = f'<#{message.channel_id}>', inline = False)
+    embed.add_field(name = 'Канал:', value = message.channel, inline = False)
     embed.set_footer(text = 'Cообщение отправлено: ' + time)
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
