@@ -566,6 +566,8 @@ async def on_message(message):
         channel = bot.get_channel(931497036249980928)
         await channel.send('<@&903780351640469574>', embed = embed)
         await message.delete()
+    else:
+        return
 
 
 @bot.event
