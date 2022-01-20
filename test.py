@@ -86,10 +86,12 @@ async def help(ctx):
     embed.add_field(name = '<a:st2:903087219802263592> Информация (!инфо Информация)', value = '`!help[!хелп, !помощь]` `!server[!сервер]` `!user[!юзер]` `!info[!инфо]`', inline = False)
     embed.add_field(name = '<a:st1:903087219777093642> Модерация (!инфо Модерация)', value = '`!clear[!очистить]` `!ban[!бан]` `!kick[!кик]`', inline = False)
     embed.add_field(name = '<a:st2:903087219802263592> Полезное (!инфо Полезное)', value = '`!ava[!ава]`', inline = False)
+    embed.add_field(name = '<a:st2:903087219802263592> Для овнеров (!инфо Для овнеров)', value = '`!create[!создать]` `!give[!выдать]` `!remove[!забрать]`', inline = False)
     await ctx.reply(embed = embed, components = [ [
         Button(style = ButtonStyle.green, label = 'Информация', emoji = '🥀'),
         Button(style = ButtonStyle.red, label = 'Модерация', emoji = '🥥'),
-        Button(style = ButtonStyle.blue, label = 'Полезное', emoji = '👑')
+        Button(style = ButtonStyle.green, label = 'Полезное', emoji = '👑'),
+        Button(style = ButtonStyle.red, label = 'Для овнеров', emoji = '💯')
     ] ])
 
     cycle = True
@@ -113,7 +115,7 @@ async def help(ctx):
                     )
                 embedutils.add_field(name = '!ава - просмотр аватарки пользователя', value = 'Использование: `!ава <упоминание пользователя>`/`!ava <упоминание пользователя>`', inline = False)
                 await response.respond(embed = embedutils)
-            else:
+            elif response.component.label == 'Модерация':
                 embedmod = discord.Embed(
                     title = 'Доступные команды подгруппы "Модерация⭐"',
                     color = discord.Color.from_rgb(244, 127, 255)
@@ -122,10 +124,18 @@ async def help(ctx):
                 embedmod.add_field(name = '!бан - бан участника', value = 'Использование: `!бан/!ban <пользователь> <причина> - бан пользователя с причиной`', inline = False)
                 embedmod.add_field(name = '!кик - кик участника', value = 'Использование: `!кик/!kick <пользователь> <причина> - кик пользователя с причиной`', inline = False)
                 await response.respond(embed = embedmod)
-
+            else:
+                embedowm = discord.Embed(
+                    title = 'Доступные команды подгруппы "Для овнеров⭐"',
+                    color = discord.Color.from_rgb(244, 127, 255)
+                    )
+                embedowm.add_field(name = '!создать - создать роль семьи', value = 'Использование: `!создать`/`!create <цвет> <название фамы>`', inline = False)
+                embedowm.add_field(name = '!выдать - выдать роль члену семьи', value = 'Использование: `!give/!выдать <id роли> <id пользователя>`', inline = False)
+                embedowm.add_field(name = '!забрать - забрать роль семьиу пользователя', value = 'Использование: `!remove/!забрать <id роли> <id пользователя>`', inline = False)
+                await response.respond(embed = embedowm)
 
 @bot.command(aliases = ['инфо'])
-async def info(ctx, arg = None):
+async def info(ctx, *, arg = None):
     embed = discord.Embed(
         description = 'Приветствую! Я — бот-помощник для сервера Famq & News. Я умею многое, можешь посмотреть)\n\nМой префикс - `!`. Используй команду `!хелп` и увидишь, что я такое и мои возможности <a:st2:903087219802263592>',
         color = discord.Color.from_rgb(244, 127, 255))
@@ -154,6 +164,14 @@ async def info(ctx, arg = None):
         )
     embed3.add_field(name = '!ава - просмотр аватарки пользователя', value = 'Использование: `!ава <упоминание пользователя>`/`!ava <упоминание пользователя>`', inline = False)
 
+    embed4 = discord.Embed(
+        title = 'Доступные команды подгруппы "Для овнеров⭐"',
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed4.add_field(name = '!создать - создать роль семьи', value = 'Использование: `!создать`/`!create <цвет> <название фамы>`', inline = False)
+    embed4.add_field(name = '!выдать - выдать роль члену семьи', value = 'Использование: `!give/!выдать <id роли> <id пользователя>`', inline = False)
+    embed4.add_field(name = '!забрать - забрать роль семьиу пользователя', value = 'Использование: `!remove/!забрать <id роли> <id пользователя>`', inline = False)
+
     if arg == None:
         await ctx.reply(embed = embed)
     elif arg == 'информация':
@@ -168,6 +186,10 @@ async def info(ctx, arg = None):
         await ctx.reply(embed = embed3)
     elif arg == 'Полезное':
         await ctx.reply(embed = embed3)
+    elif arg == 'для овнеров':
+        await ctx.reply(embed = embed4)
+    elif arg == 'Для овнеров':
+        await ctx.reply(embed = embed4)
     else:
         await ctx.reply('чего?')
 
