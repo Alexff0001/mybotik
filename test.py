@@ -718,4 +718,10 @@ async def on_message_delete(message):
     await channel.send(embed = embed)
 
 
+@bot.command(pass_context = True)
+async def random(ctx):
+    num = random.randrange(201)
+    await ctx.reply(f'{num}')
+    
+
 bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
