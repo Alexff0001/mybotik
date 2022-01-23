@@ -720,8 +720,8 @@ async def on_message_delete(message):
 
 @bot.command(pass_context = True)
 async def random(ctx):
-    num = random.randrange(201)
+    num = random.randint(50, 200)
     await ctx.reply(f'{num}')
-    
+
 
 bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
