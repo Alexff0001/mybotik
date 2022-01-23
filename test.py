@@ -14,6 +14,8 @@ import os
 import json
 import random
 
+from random import random, randrange, randint
+
 intents = discord.Intents.default()
 intents.members = True
 
