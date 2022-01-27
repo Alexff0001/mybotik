@@ -716,5 +716,4 @@ async def on_message_delete(message):
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
 
-
-bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.aJ1E_mmDUc3VvCRK6tUMutrlQa4')
+bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.zT_NzCbFxPSguUOzCXtqSyqeVXk')
