@@ -1,7 +1,11 @@
 import discord
 from discord import Embed
 
-from discord.ext import bot
+from discord import guild
+from discord_slash import SlashCommand, SlashContext
+from discord_slash.utils.manage_commands import create_choice, create_option
+
+# from discord.ext import bot
 from discord.ext import commands
 from discord.ext.commands import Cog
 from discord.ext.commands import command
@@ -16,8 +20,9 @@ import json
 intents = discord.Intents.default()
 intents.members = True
 
-bot = bot.Bot(command_prefix = '!', case_insensitive = True, intents = discord.Intents.all())
+bot = commands.Bot(command_prefix = '!', case_insensitive = True, intents = discord.Intents.all())
 bot.remove_command('help')
+slash = SlashCommand(bot, sync_commands = True)
 
 connection = sqlite3.connect('server.db')
 cursor = connection.cursor()
@@ -447,6 +452,22 @@ async def famq(ctx, user:discord.Member = None):
         await channel.send(user.mention, embed = embed)
 
 
+@bot.command(aliases = ['выдача'])
+async def giverole(ctx, user:discord.Member = None):
+    channel = bot.get_channel(874398614892474409)
+    embed = discord.Embed(
+        description = '__Чтобы получить роль уже существующей на этом сервере фамы, вам нужно обратиться к овнеру фамы (ЛС или тегнуть).__,',
+        color = discord.Color.from_rgb(244, 127, 255)
+        )
+    embed.set_footer(text = ctx.guild.name)
+    embed.timestamp = datetime.datetime.utcnow()
+
+    if user is None:
+        await channel.send(embed = embed)
+    else:
+        await channel.send(user.mention, embed = embed)
+
+
 @bot.command(aliases = ['овнер'])
 async def owner(ctx, user:discord.Member = None):
     channel = bot.get_channel(931497100485746688)
@@ -475,32 +496,16 @@ async def owner(ctx, user:discord.Member = None):
         if response.component.label == 'Создание роли':
             embed = discord.Embed(
                 title = 'Создание роли',
-                description = '__Чтобы создать роль своей фамы нужно прописать команду__ `!create/!создать <цвет> <название фамы>`\n\nВ аргументе `<цвет>` нужно указать один из цветов, предоставленных ниже.\nВ аргументе `<название фамы>` нужно указать название твоей фамы с большой буквы и приписать Famq **(Пример: Primer Famq)**\n', 
+                description = '__Чтобы создать роль своей фамы нужно прописать слеш команду__ `/создать `\n\nВ аргументе `<color>` нужно выбрать любой цвет по вашему желанию для роли фамы.\nВ аргументе `<name>` нужно указать название твоей фамы с большой буквы и ОБЯЗАТЕЛЬНО приписать Famq **(Пример: Union Famq)**', 
                 color = discord.Color.from_rgb(244, 127, 255)
             )
-            embed.add_field(name = 'Чёрный', value = '0x000000', inline = True)
-            embed.add_field(name = 'Белый', value = '0xFFFFFF', inline = True)
-            embed.add_field(name = 'Серый', value = '0x808080', inline = True)
-            embed.add_field(name = 'Фиолетовый', value = '0x800080', inline = True)
-            embed.add_field(name = 'Розовый', value = '0xFF1493', inline = True)
-            embed.add_field(name = 'Пурпурный', value = '0xFF00FF', inline = True)
-            embed.add_field(name = 'Красный', value = '0xFF0000', inline = True)
-            embed.add_field(name = 'Оранжевый', value = '0xFF4500', inline = True)
-            embed.add_field(name = 'Коричневый', value = '0x8B4513', inline = True)
-            embed.add_field(name = 'Жёлтый', value = '0xFFFF00', inline = True)
-            embed.add_field(name = 'Зелёный', value = '0x008000', inline = True)
-            embed.add_field(name = 'Лаймовый', value = '0x00FF00', inline = True)
-            embed.add_field(name = 'Голубенький', value = '0x00FFFF', inline = True)
-            embed.add_field(name = 'Синий', value = '0x0000FF', inline = True)
-            embed.add_field(name = 'Морской', value = '0x191970', inline = True)
-
             embed.set_footer(text = ctx.guild.name)
             embed.timestamp = datetime.datetime.utcnow()
             await response.respond(embed = embed)
         elif response.component.label == 'Выдача ролей':
             embed1 = discord.Embed(
                 title = 'Выдача ролей',
-                description = '__Чтобы выдать роль своей фамы нужно прописать команду__ `!give/!выдать <id роли> <id пользователя>`\n\nВ аргументе `<id роли>` нужно указать id роли фамы, который был указан в сообщении бота о успешном создании роли.\nВ аргументе `<id пользователя>` нужно указать id одного из членов фамы **(Пример:** !выдать 833342247432355840 909585478037155913**)**\n\n[Как получить ID пользователя.](https://www.youtube.com/watch?v=9T0KqA8akrY)',
+                description = '__Чтобы выдать роль своей фамы нужно прописать слеш команду__ `/выдать`\n\nВ аргументе `<role>` нужно указать роль, которую вы только что создали.\nВ аргументе `<user>` - упоминание одного из членов фамы.',
                 color = discord.Color.from_rgb(244, 127, 255)
                 )
             embed1.set_footer(text = ctx.guild.name)
@@ -508,40 +513,40 @@ async def owner(ctx, user:discord.Member = None):
             await response.respond(embed = embed1)
 
 
-@bot.command(aliases = ['создать'])
-@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
-async def create(ctx, color, *, arg):
-    guild = ctx.guild
-    role = await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
-    embed = discord.Embed(
-        title = 'Роль успешно создана!',
-        description = f'Роль фамы **{role.mention}** создана!\nЦвет **{color}** применён!\n\nID роли фамы: **{role.id}**\n\nОвнер фамы: {ctx.author.mention}',
-        color = discord.Color(int(color, 0)),
-        timestamp = datetime.datetime.utcnow()
-        )
-    embed.set_thumbnail(url = ctx.guild.icon_url)
-    embed.set_footer(text = 'Famq&News Bot')
-    await ctx.reply(embed = embed)
+# @bot.command(aliases = ['создать'])
+# @commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+# async def create(ctx, color, *, arg):
+#     guild = ctx.guild
+#     role = await guild.create_role(name = arg, colour = discord.Colour(int(color, 0)), hoist = True)
+#     embed = discord.Embed(
+#         title = 'Роль успешно создана!',
+#         description = f'Роль фамы **{role.mention}** создана!\nЦвет **{color}** применён!\n\nID роли фамы: **{role.id}**\n\nОвнер фамы: {ctx.author.mention}',
+#         color = discord.Color(int(color, 0)),
+#         timestamp = datetime.datetime.utcnow()
+#         )
+#     embed.set_thumbnail(url = ctx.guild.icon_url)
+#     embed.set_footer(text = 'Famq&News Bot')
+#     await ctx.reply(embed = embed)
 
 
-@bot.command(aliases = ['выдать'])
-@commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
-async def give(ctx, role: discord.Role, user: discord.Member):
-    if user is None:
-        user = ctx.author
-        await ctx.message.add_reaction('<a:ok6:903086917371965450>')
-        await user.add_roles(role)
-    if role in user.roles:
-        em = discord.Embed(
-            description = 'Пользователь уже имеет эту роль!',
-            color = discord.Color.from_rgb(255, 0, 0)
-            )
-        em.set_footer(text = 'Famq&News Bot')
-        em.timestamp = datetime.datetime.utcnow()
-        await ctx.reply(embed = em)
-    else:
-        await ctx.message.add_reaction('<a:ok6:903086917371965450>')
-        await user.add_roles(role)
+# @bot.command(aliases = ['выдать'])
+# @commands.has_any_role(910227213708836884, 884510313486098443, 903783220066258945)
+# async def give(ctx, role: discord.Role, user: discord.Member):
+#     if user is None:
+#         user = ctx.author
+#         await ctx.message.add_reaction('<a:ok6:903086917371965450>')
+#         await user.add_roles(role)
+#     if role in user.roles:
+#         em = discord.Embed(
+#             description = 'Пользователь уже имеет эту роль!',
+#             color = discord.Color.from_rgb(255, 0, 0)
+#             )
+#         em.set_footer(text = 'Famq&News Bot')
+#         em.timestamp = datetime.datetime.utcnow()
+#         await ctx.reply(embed = em)
+#     else:
+#         await ctx.message.add_reaction('<a:ok6:903086917371965450>')
+#         await user.add_roles(role)
 
 
 @bot.command(aliases = ['забрать'])
@@ -716,4 +721,166 @@ async def on_message_delete(message):
     channel = bot.get_channel(874520061069623388)
     await channel.send(embed = embed)
 
+
+@slash.slash(
+    name = "создать",
+    description = "Создать роль своей фамы!",
+    guild_ids = [833342247432355840],
+    options = [create_option(
+        name = 'color',
+        description = 'Выбери цвет роли!',
+        required = True,
+        option_type = 3,
+        choices = [
+            create_choice(
+                name = 'Чёрный',
+                value = '0x000001'
+            ),
+            create_choice(
+                name = 'Белый',
+                value = '0xFFFFFF'
+            ),
+            create_choice(
+                name = 'Серый',
+                value = '0x808080'
+            ),
+            create_choice(
+                name = 'Фиолетовый',
+                value = '0x800080'
+            ),
+            create_choice(
+                name = 'Розовый',
+                value = '0xFF1493'
+            ),
+            create_choice(
+                name = 'Пурпурный',
+                value = '0xFF00FF'
+            ),
+            create_choice(
+                name = 'Красный',
+                value = '0xFF0000'
+            ),
+            create_choice(
+                name = 'Оранжевый',
+                value = '0xFF4500'
+            ),
+            create_choice(
+                name = 'Коричневый',
+                value = '0x8B4513'
+            ),
+            create_choice(
+                name = 'Жёлтый',
+                value = '0xFFFF00'
+            ),
+            create_choice(
+                name = 'Зелёный',
+                value = '0x008000'
+            ),
+            create_choice(
+                name = 'Лаймовый',
+                value = '0x00FF00'
+            ),
+            create_choice(
+                name = 'Голубенький',
+                value = '0x00FFFF'
+            ),
+            create_choice(
+                name = 'Синий',
+                value = '0x0000FF'
+            ),
+            create_choice(
+                name = 'Морской',
+                value = '0x191970'
+            )
+        ]
+    ),
+    create_option(
+        name = 'name',
+        description = 'Пропиши название фамы! После названия обязательно приписать "Famq". (Пример: Primer Famq)',
+        required = True,
+        option_type = 3,
+        )
+    ]
+)
+async def create(ctx: SlashContext, color: str, name: str):  
+    role = await ctx.guild.create_role(name = name, colour = discord.Colour(int(color, 0)), hoist = True)
+    
+    owner_role1 = ctx.guild.get_role(903783220066258945)
+    admin1 = ctx.guild.get_role(884510313486098443)
+
+    if owner_role1 or admin1 in ctx.author.roles:
+        em = discord.Embed(
+            title = 'Роль успешно создана!',
+            description = f'Роль фамы **{role.mention}** создана!\nЦвет **{color}** применён!\n\nID роли фамы: **{role.id}**\n\nОвнер фамы: {ctx.author.mention}\n\n`Если имеется желание поменять цвет роли, то пишите` - <@909585478037155913>, <@494833692909502485>, <@437865730332033024>',
+            color = discord.Color(int(color, 0)),
+            timestamp = datetime.datetime.utcnow()
+        )
+        em.set_thumbnail(url = ctx.guild.icon_url)
+        em.set_footer(text = 'Famq&News Bot')
+        await ctx.reply(embed = em)
+        await ctx.author.add_roles(role)
+    else:
+        em1 = discord.Embed(
+            title = 'Ошибка!',
+            description = f'Ты не имеешь права использовать эту команду!\nУ тебя нет роли {owner_role1.mention}',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em1.set_thumbnail(url = ctx.guild.icon_url)
+        em1.set_footer(text = 'Famq&News Bot')
+        
+        await ctx.reply(embed = em1, hidden = True)
+
+
+
+@slash.slash(
+    name = "выдать",
+    description = "Выдайте роль членам своей фамы!",
+    guild_ids = [833342247432355840],
+    options = [create_option(
+        name = 'role',
+        description = 'Выбери роль!',
+        required = True,
+        option_type = 8
+    ),
+    create_option(
+        name = 'user',
+        description = 'Кому выдать роль?',
+        required = True,
+        option_type = 6,
+        )
+    ]
+)
+async def give(ctx: SlashContext, role: str, *, user: str):    
+    owner_role = ctx.guild.get_role(903783220066258945)
+    admin = ctx.guild.get_role(884510313486098443)
+    if role.position >= ctx.author.top_role.position:
+        em0 = discord.Embed(
+            title = 'Ошибка!',
+            description = 'Ты не имеешь права выдать роль как у тебя или выше!',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em0.set_thumbnail(url = ctx.guild.icon_url)
+        em0.set_footer(text = 'Famq&News Bot')
+        
+        await ctx.reply(embed = em0, hidden = True)
+    elif owner_role or admin in ctx.author.roles:
+        em = discord.Embed(
+            description = f'Роль {role.mention} выдана {user.mention}!',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em.set_footer(text = 'Famq&News Bot')
+        await ctx.reply(embed = em)
+        await user.add_roles(role)
+    else:
+        em1 = discord.Embed(
+            title = 'Ошибка!',
+            description = f'Ты не имеешь права использовать эту команду!\nУ тебя нет роли {owner_role.mention}',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em1.set_thumbnail(url = ctx.guild.icon_url)
+        em1.set_footer(text = 'Famq&News Bot')
+        
+        await ctx.reply(embed = em1, hidden = True)
+
+        
 bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.zT_NzCbFxPSguUOzCXtqSyqeVXk')
