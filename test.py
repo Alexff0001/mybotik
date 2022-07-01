@@ -883,4 +883,4 @@ async def give(ctx: SlashContext, role: str, *, user: str):
         await ctx.reply(embed = em1, hidden = True)
 
         
-bot.run('OTI3OTc3NjY4NzYxMjUxOTYw.YdSEjQ.zT_NzCbFxPSguUOzCXtqSyqeVXk')
+bot.run('e3fd820f59979281267ca743526f481196983e5018a3c5fabbbda3149c1cac77')
