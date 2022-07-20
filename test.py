@@ -34,7 +34,7 @@ async def on_ready():
     bot.ready = True
     embed = discord.Embed(description = '**Бот работает!**')
     embed.timestamp = datetime.datetime.utcnow()
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="!хелп"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="!хелп🇷🇺"))
     await bot.get_channel(930098745478099026).send(embed = embed)
 
 
@@ -226,7 +226,7 @@ async def clear(ctx, amount = 25):
 
 
 @bot.command(aliases = ['бан'])
-@commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
+@commands.has_any_role(874406341127573554, 910227213708836884, 905125141355319367, 875788818421256314)
 async def ban(ctx, member: discord.Member = None, *, reason = 'Не указана'):
     if member is None:
         embed0 = discord.Embed(
