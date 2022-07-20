@@ -199,7 +199,7 @@ async def info(ctx, *, arg = None):
 
 
 @bot.command(pass_context = True, aliases = ['очистить'])
-@commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
+@commands.has_any_role(874406341127573554, 910227213708836884, 905125141355319367, 875788818421256314)
 async def clear(ctx, amount = 25):
     await ctx.channel.purge(limit = int(amount) + 1)
     
