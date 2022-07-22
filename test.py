@@ -143,7 +143,7 @@ async def info(ctx, *, arg = None):
     embed = discord.Embed(
         description = 'Приветствую! Я — бот-помощник для сервера Famq & News. Я умею многое, можешь посмотреть)\n\nМой префикс - `!`. Используй команду `!хелп` и увидишь, что я такое и мои возможности <a:st2:903087219802263592>',
         color = discord.Color.from_rgb(244, 127, 255))
-    embed.add_field(name = 'Мои разработчики:', value = '<:dnd:929006191420514354> welcomeu#1337 <@909585478037155913>\n<:dnd:929006191420514354> Alexff(Сашуля)#0001')
+    embed.add_field(name = 'Мои разработчики:', value = '<:dnd:929006191420514354> Сашуля#7008 <@494833692909502485>')
     embed.set_footer(text = 'Ваш Famq&News Bot © 2022', icon_url = ctx.guild.icon_url)
     embed.set_author(name = 'Famq&News Bot', icon_url = ctx.guild.icon_url)
     
