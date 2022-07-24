@@ -288,10 +288,10 @@ async def ban(ctx, member: discord.Member = None, *, reason = 'Не указан
         )
     ]
 )
-async def kick(ctx: SlashContext, user: str, reason: str):    
+async def kick(ctx: SlashContext, user: discord.Member, reason: str):
     admin = ctx.guild.get_role(874406341127573554)
     admin1 = ctx.guild.get_role(910227213708836884)
-    if ctx.user.top_role.position >= ctx.author.top_role.position:
+    if user.top_role >= ctx.author.top_role:
         em0 = discord.Embed(
             title = 'Ошибка!',
             description = 'Ты не имеешь права кикнуть пользователя, у которого роли как у тебя или выше!',
@@ -321,57 +321,107 @@ async def kick(ctx: SlashContext, user: str, reason: str):
         await ctx.reply(embed = em1, hidden = True)
 
 
-# @bot.command(aliases = ['кик'])
-# @commands.has_any_role(884510313486098443, 910227213708836884, 905125141355319367, 875788818421256314)
-# async def kick(ctx, member: discord.Member = None, *, reason = 'Не указана'):
-#     if role.position >= ctx.author.top_role.position:
-#         em0 = discord.Embed(
-#             title = 'Ошибка!',
-#             description = 'Ты не имеешь права выдать роль как у тебя или выше!',
+# elif admin or admin1 in ctx.author.roles:
+#         em = discord.Embed(
+#             description = f'Пользователь {user.mention} {user} кикнут!',
 #             timestamp = datetime.datetime.utcnow()
 #         )
-#         em0.set_thumbnail(url = ctx.guild.icon_url)
-#         em0.set_footer(text = 'Famq&News Bot')
-#     if member is None:
-#         embed0 = discord.Embed(
-#             description = 'Укажи пользователя, которого хочешь кикнуть!',
-#             color = discord.Color.from_rgb(255, 0, 0)
-#             )
-#         embed0.set_footer(text = 'Famq&News Bot')
-#         embed0.timestamp = datetime.datetime.utcnow()
-#         await ctx.reply(embed = embed0)
-    
-#     elif member is ctx.author:
-#         embed1 = discord.Embed(
-#             description = 'Ты не можешь кикнуть самого себя..!',
-#             color = discord.Color.from_rgb(255, 0, 0)
-#             )
-#         embed1.set_footer(text = 'Famq&News Bot')
-#         embed1.timestamp = datetime.datetime.utcnow()
-#         await ctx.reply(embed = embed1)
-    
-#     elif member != ctx.author:
-#         channel = bot.get_channel(874520061069623388)
-#         em = discord.Embed(
-#             title = 'Пользователь был кикнут!',
-#             description = f'**Пользователь:** {member.mention}',
-#             color = discord.Color.from_rgb(255, 0, 0)
-#             )
-#         em.add_field(name = 'ID', value = member.id, inline = True)
-#         em.add_field(name = 'Причина', value = reason, inline = True)
-#         em.add_field(name = 'Модератор', value = f'{ctx.author.mention} {ctx.author}', inline = True)
 #         em.set_footer(text = 'Famq&News Bot')
-#         em.timestamp = datetime.datetime.utcnow()
+#         await ctx.reply(embed = em)
+#         await user.kick(reason = reason)
+#     else:
+#         em1 = discord.Embed(
+#             title = 'Ошибка!',
+#             description = f'Ты не имеешь права использовать эту команду!\nУ тебя нет роли {admin.mention}',
+#             timestamp = datetime.datetime.utcnow()
+#         )
+#         em1.set_thumbnail(url = ctx.guild.icon_url)
+#         em1.set_footer(text = 'Famq&News Bot')
+        
+#         await ctx.reply(embed = em1, hidden = True)
 
-#         embed = discord.Embed(
-#             description = 'Пользователь кикнут!',
-#             color = discord.Color.from_rgb(244, 127, 255)
-#             )
-#         embed.set_footer(text = 'Famq&News Bot')
-#         embed.timestamp = datetime.datetime.utcnow()
-#         await member.kick(reason = reason)
-#         await ctx.reply(embed = embed)
-#         await channel.send(embed = em)
+
+@bot.command(aliases = ['кик'])
+async def kick(ctx, user: discord.Member = None, *, reason = 'Не указана'):
+    admin = ctx.guild.get_role(874406341127573554)
+    admin1 = ctx.guild.get_role(910227213708836884)
+    if user.top_role.position >= ctx.author.top_role.position:
+        em0 = discord.Embed(
+            title = 'Ошибка!',
+            description = 'Ты не имеешь права кикнуть пользователя, у которого роли как у тебя или выше!',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em0.set_thumbnail(url = ctx.guild.icon_url)
+        em0.set_footer(text = 'Famq&News Bot')
+        
+        await ctx.reply(embed = em0, hidden = True)
+    elif admin or admin1 in ctx.author.roles:
+        em = discord.Embed(
+            description = f'Пользователь {user.mention} {user} кикнут!',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em.set_footer(text = 'Famq&News Bot')
+        await ctx.reply(embed = em)
+        await user.kick(reason = reason)
+    else:
+        em1 = discord.Embed(
+            title = 'Ошибка!',
+            description = f'Ты не имеешь права использовать эту команду!\nУ тебя нет роли {admin.mention}',
+            timestamp = datetime.datetime.utcnow()
+        )
+        em1.set_thumbnail(url = ctx.guild.icon_url)
+        em1.set_footer(text = 'Famq&News Bot')
+        
+        await ctx.reply(embed = em1, hidden = True)
+    
+    # if role.position >= ctx.author.top_role.position:
+    #     em0 = discord.Embed(
+    #         title = 'Ошибка!',
+    #         description = 'Ты не имеешь права выдать роль как у тебя или выше!',
+    #         timestamp = datetime.datetime.utcnow()
+    #     )
+    #     em0.set_thumbnail(url = ctx.guild.icon_url)
+    #     em0.set_footer(text = 'Famq&News Bot')
+    # if member is None:
+    #     embed0 = discord.Embed(
+    #         description = 'Укажи пользователя, которого хочешь кикнуть!',
+    #         color = discord.Color.from_rgb(255, 0, 0)
+    #         )
+    #     embed0.set_footer(text = 'Famq&News Bot')
+    #     embed0.timestamp = datetime.datetime.utcnow()
+    #     await ctx.reply(embed = embed0)
+    
+    # elif member is ctx.author:
+    #     embed1 = discord.Embed(
+    #         description = 'Ты не можешь кикнуть самого себя..!',
+    #         color = discord.Color.from_rgb(255, 0, 0)
+    #         )
+    #     embed1.set_footer(text = 'Famq&News Bot')
+    #     embed1.timestamp = datetime.datetime.utcnow()
+    #     await ctx.reply(embed = embed1)
+    
+    # elif member != ctx.author:
+    #     channel = bot.get_channel(874520061069623388)
+    #     em = discord.Embed(
+    #         title = 'Пользователь был кикнут!',
+    #         description = f'**Пользователь:** {member.mention}',
+    #         color = discord.Color.from_rgb(255, 0, 0)
+    #         )
+    #     em.add_field(name = 'ID', value = member.id, inline = True)
+    #     em.add_field(name = 'Причина', value = reason, inline = True)
+    #     em.add_field(name = 'Модератор', value = f'{ctx.author.mention} {ctx.author}', inline = True)
+    #     em.set_footer(text = 'Famq&News Bot')
+    #     em.timestamp = datetime.datetime.utcnow()
+
+    #     embed = discord.Embed(
+    #         description = 'Пользователь кикнут!',
+    #         color = discord.Color.from_rgb(244, 127, 255)
+    #         )
+    #     embed.set_footer(text = 'Famq&News Bot')
+    #     embed.timestamp = datetime.datetime.utcnow()
+    #     await member.kick(reason = reason)
+    #     await ctx.reply(embed = embed)
+    #     await channel.send(embed = em)
 
 
 @bot.command(aliases = ['ава'])
@@ -910,7 +960,7 @@ async def create(ctx: SlashContext, color: str, name: str):
 )
 async def give(ctx: SlashContext, role: str, *, user: str):    
     owner_role = ctx.guild.get_role(903783220066258945)
-    admin = ctx.guild.get_role(884510313486098443)
+    moder = ctx.guild.get_role(903780351640469574)
     if role.position >= ctx.author.top_role.position:
         em0 = discord.Embed(
             title = 'Ошибка!',
@@ -921,10 +971,10 @@ async def give(ctx: SlashContext, role: str, *, user: str):
         em0.set_footer(text = 'Famq&News Bot')
         
         await ctx.reply(embed = em0, hidden = True)
-    elif owner_role or admin in ctx.author.roles:
+    elif owner_role or moder in ctx.author.roles:
         em = discord.Embed(
-            description = f'Роль {role.mention} выдана {user.mention}!',
-            timestamp = datetime.datetime.utcnow()
+        description = f'Роль {role.mention} выдана {user.mention}!',
+        timestamp = datetime.datetime.utcnow()
         )
         em.set_footer(text = 'Famq&News Bot')
         await ctx.reply(embed = em)
@@ -932,13 +982,14 @@ async def give(ctx: SlashContext, role: str, *, user: str):
     else:
         em1 = discord.Embed(
             title = 'Ошибка!',
-            description = f'Ты не имеешь права использовать эту команду!\nУ тебя нет роли {owner_role.mention}',
+            description = f'Ты не имеешь права использовать эту команду!\n**У тебя нет нужных ролей(**',
             timestamp = datetime.datetime.utcnow()
         )
         em1.set_thumbnail(url = ctx.guild.icon_url)
         em1.set_footer(text = 'Famq&News Bot')
-        
         await ctx.reply(embed = em1, hidden = True)
+        
+        
 
         
 bot.run('OTkyNTI0OTYyMTQ3NjE0NzIw.GCmw4a.Bt8zbEpV9nD653cS1vs8R2YRruMdwkQXWcj9uA')
